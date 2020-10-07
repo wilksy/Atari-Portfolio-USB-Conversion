@@ -5,9 +5,12 @@ Hardware
 --------
 
 Atari Portfolio keyboard
+
 20pin (only 16 pins used) ribbon cable to thru-hold adaptor board (https://www.amazon.co.uk/gp/product/B07RS3J7PQ/)
+
 Teensy LC 
 
+---------
 Contact Me for Atari Keyboard Ribbon to Ribbon Cable board connection info.
 
 Support multiple key presses - Currretly have ghosting with more than 4 keys pressed.

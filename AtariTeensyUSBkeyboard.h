@@ -3,20 +3,25 @@
 // FYI The Atari key is going to be dealt with once the build has developed, potentially a on-off button. Sits in pos 8,8 in 
 //matrix
 //
+
+// TO FIX
+// *** key does not work, presents # instead - localisation issue - rainy day fix.
+
+
 const byte rows_max = 8; // sets the number of rows in the matrix
 const byte cols_max = 8; // sets the number of columns in the matrix
 // 
 
 
 int normal[rows_max][cols_max] = { /// this was a pain to work out.
-{KEY_ESC,KEY_BACKSLASH,KEY_N,KEY_V,KEY_C,KEY_B,KEY_M,KEY_A},
+{KEY_ESC,KEY_SLASH,KEY_N,KEY_V,KEY_C,KEY_B,KEY_M,KEY_A},
 {KEY_K,KEY_CAPS_LOCK,KEY_LEFT,KEY_H,KEY_F,KEY_J,KEY_RIGHT,KEY_8},
-{KEY_LEFT_BRACE,KEY_UP,0,KEY_I,KEY_0,KEY_MINUS,KEY_RIGHT_BRACE,KEY_QUOTE},
+{KEY_RIGHT_BRACE,KEY_UP,0,KEY_I,KEY_0,KEY_MINUS,KEY_LEFT_BRACE,KEY_QUOTE},
 {KEY_9,KEY_7,KEY_U,0,KEY_DELETE,KEY_Q,KEY_O,KEY_BACKSPACE},
 {KEY_6,KEY_D,KEY_2,KEY_0,0,KEY_1,KEY_3,KEY_5},
 {KEY_Y,KEY_T,KEY_E,KEY_W,KEY_TAB,0,KEY_R,KEY_ENTER},
 {KEY_L,KEY_DOWN,KEY_G,KEY_P,KEY_S,KEY_4,0,KEY_COMMA},
-{KEY_Z,KEY_EQUAL,KEY_SEMICOLON,KEY_Z,KEY_BACKSLASH,KEY_SPACE,KEY_PERIOD,0}
+{KEY_X,KEY_EQUAL,KEY_SEMICOLON,KEY_Z,KEY_BACKSLASH,KEY_SPACE,KEY_PERIOD,0}
 };
 
 
@@ -246,11 +251,23 @@ void setup() {
 //
   for (int b = 0; b < rows_max; b++) {  // loop thru all row pins 
     go_z(Row_IO[b]); // set each row pin as a floating output
-  }  
+  } 
+
+ Keyboard.set_modifier(0);
+ Keyboard.set_key1(0);
+ Keyboard.set_key2(0);
+ Keyboard.set_key3(0);
+ Keyboard.set_key4(0);
+ Keyboard.set_key5(0);
+ Keyboard.set_key6(0);
+ Keyboard.send_now();
+
+ 
 }
 //
 boolean Fn_pressed = HIGH; // Initialize Fn key to HIGH = "not pressed"
 
+//.clear and send usb buffer - helps with iffy key codes sent on boot
 
 //
 //---------------------------------Main Loop---------------------------------------------
@@ -299,6 +316,8 @@ void loop() {
         if (!digitalRead(Col_IO[y]) && (old_key[x][y]) && (!slots_full)) { // check if key pressed and not previously pressed and slots not full
           old_key[x][y] = LOW; // Save state of key as "pressed"
           if (Fn_pressed) {  // Fn_pressed is active low so it is not pressed and normal key needs to be sent
+            Serial.println (x);
+            Serial.println (y);
             load_slot(normal[x][y]); //update first available slot with normal key name
             send_normals(); // send all slots over USB including the key that just got pressed
           }
